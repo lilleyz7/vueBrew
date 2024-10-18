@@ -1,21 +1,45 @@
 <script setup>
 import { ref } from 'vue'
+
+const emit = defineEmits(['response', 'error'])
 const username = ref('')
 const password = ref('')
 
-function handleLogin() {}
+async function handleLogin() {
+  const url = 'http://localhost:8000/auth/token/'
+  const data = { username: username.value, password: password.value }
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+
+    if (!response.ok) {
+      emit('error', response.json())
+    }
+
+    const successfulJson = await response.json()
+    emit('response', successfulJson)
+    return
+  } catch (e) {
+    alert(e)
+  }
+}
 </script>
 
 <template>
   <div className="form-container">
     <h2>Login</h2>
-    <form method="POST">
+    <form @submit.prevent="onSubmit" method="POST">
       <label>Username</label>
       <input
         v-model="username"
         type="text"
         id="username"
         name="username"
+        :minlength="8"
+        :maxlength="20"
         required
       />
 
@@ -25,6 +49,7 @@ function handleLogin() {}
         type="password"
         id="password"
         name="password"
+        :minlength="8"
         required
       />
       <button @click="handleLogin" type="submit">Login</button>
