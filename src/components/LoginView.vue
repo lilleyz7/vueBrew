@@ -5,6 +5,10 @@ const emit = defineEmits(['response', 'error'])
 const username = ref('')
 const password = ref('')
 
+async function switchToRegister() {
+  emit('response', 2)
+}
+
 async function handleLogin() {
   const url = 'http://localhost:8000/auth/token/'
   const data = { username: username.value, password: password.value }
@@ -16,11 +20,12 @@ async function handleLogin() {
     })
 
     if (!response.ok) {
-      emit('error', response.json())
+      emit('error', await response.json())
     }
 
     const successfulJson = await response.json()
-    emit('response', successfulJson)
+    localStorage.setItem('token', successfulJson.access)
+    emit('response', 0)
     return
   } catch (e) {
     alert(e)
@@ -31,6 +36,7 @@ async function handleLogin() {
 <template>
   <div className="form-container">
     <h2>Login</h2>
+
     <form @submit.prevent="onSubmit" method="POST">
       <label>Username</label>
       <input
@@ -53,9 +59,11 @@ async function handleLogin() {
         required
       />
       <button @click="handleLogin" type="submit">Login</button>
-
-      <p>Don't have an account? register<a href="/register">HERE</a></p>
     </form>
+    <p>
+      Don't have an account?
+      <button @click="switchToRegister">Register Here</button>
+    </p>
   </div>
 </template>
 

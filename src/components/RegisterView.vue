@@ -3,14 +3,49 @@ import { ref } from 'vue'
 const username = ref('')
 const password = ref('')
 const password2 = ref('')
+const email = ref('')
 
-function handleRegister() {}
+const emit = defineEmits(['response', 'error'])
+
+function navigateToLogin() {
+  emit('response', 1)
+}
+async function handleRegister() {
+  if (password.value !== password2.value) {
+    alert('Passwords do not match')
+    return
+  }
+  const url = 'http://localhost:8000/auth/register/'
+  const data = {
+    username: username.value,
+    email: email.value,
+    password: password.value,
+  }
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+
+    if (!response.ok) {
+      emit('error', await response.json())
+    }
+
+    const successfulJson = await response.json()
+    localStorage.setItem('token', successfulJson.access)
+    emit('response', 0)
+    return
+  } catch (e) {
+    alert(e)
+  }
+}
 </script>
 
 <template>
   <div className="form-container">
     <h2>Login</h2>
-    <form method="POST">
+    <form @submit.prevent="onSubmit" method="POST">
       <label>Username</label>
       <input
         v-model="username"
@@ -20,6 +55,9 @@ function handleRegister() {}
         required
       />
 
+      <label>Email</label>
+      <input v-model="email" type="email" id="email" name="email" required />
+
       <label>Password</label>
       <input
         v-model="password"
@@ -28,7 +66,6 @@ function handleRegister() {}
         name="password"
         required
       />
-      <button @click="handleRegister" type="submit">Login</button>
 
       <label>Enter Password Again</label>
       <input
@@ -38,11 +75,13 @@ function handleRegister() {}
         name="password2"
         required
       />
-      <button type="submit">Login</button>
-
-      <p>Already have an account? Login<a href="/login">HERE</a></p>
+      <button @click="handleRegister" type="submit">Register</button>
     </form>
   </div>
+  <p>
+    Already have an account?
+    <button @click="navigateToLogin">Login Here</button>
+  </p>
 </template>
 
 <style scoped>
