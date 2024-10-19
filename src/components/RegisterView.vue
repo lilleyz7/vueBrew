@@ -31,10 +31,7 @@ async function handleRegister() {
     if (!response.ok) {
       emit('error', await response.json())
     }
-
-    const successfulJson = await response.json()
-    localStorage.setItem('token', successfulJson.access)
-    emit('response', 0)
+    emit('response', 1)
     return
   } catch (e) {
     alert(e)

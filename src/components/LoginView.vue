@@ -25,7 +25,7 @@ async function handleLogin() {
 
     const successfulJson = await response.json()
     localStorage.setItem('token', successfulJson.access)
-    emit('response', 0)
+    emit('response', 3)
     return
   } catch (e) {
     alert(e)

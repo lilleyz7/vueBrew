@@ -3,15 +3,14 @@ import { onMounted, ref, watch } from 'vue'
 import LoginView from './components/LoginView.vue'
 import RegisterView from './components/RegisterView.vue'
 import SearchView from './components/SearchView.vue'
-import SavesView from './components/SavesView.vue'
 
 const currentView = ref(1)
 const token = ref(null)
 const success = ref(null)
 const error = ref(null)
 
-watch(success, () => {
-  error.value = null
+watch(currentView, () => {
+  success.value = true
 })
 watch(error, () => {
   success.value = null
@@ -42,11 +41,11 @@ onMounted(() => {
       <div v-if="currentView === 3">
         <SearchView />
       </div>
-      <div v-else-if="currentView === 0">
+      <!-- <div v-else-if="currentView === 0">
         <SavesView />
-      </div>
+      </div> -->
     </div>
-    <div v-else>
+    <div v-else-if="!token">
       <ul>
         <li><button @click="currentView = 1">Login</button></li>
         <li><button @click="currentView = 2">Register</button></li>
@@ -63,12 +62,6 @@ onMounted(() => {
         @response="res => (currentView = res)"
         @error="err => (error = err)"
       />
-    </div>
-    <div v-if="success">
-      <p>Success: woooo</p>
-    </div>
-    <div v-else-if="error">
-      <p>Error: booooo</p>
     </div>
   </main>
 </template>
