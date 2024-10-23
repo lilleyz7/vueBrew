@@ -3,7 +3,8 @@ import { onMounted, ref } from 'vue'
 import TableComponent from './TableComponent.vue'
 
 const saveData = ref([])
-onMounted(async () => {
+
+async function fetchData() {
   const token = localStorage.getItem('token')
   const url = `http://localhost:8000/api/view_saves`
   const headers = {
@@ -25,9 +26,12 @@ onMounted(async () => {
     alert(e)
     return
   }
-})
+}
+
+onMounted(fetchData)
 </script>
 
 <template>
-  <div><TableComponent /></div>
+  <h1>Saved Breweries</h1>
+  <div><TableComponent :breweries="saveData" /></div>
 </template>

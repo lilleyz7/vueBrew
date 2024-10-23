@@ -3,6 +3,7 @@ import { onMounted, ref, watch } from 'vue'
 import LoginView from './components/LoginView.vue'
 import RegisterView from './components/RegisterView.vue'
 import SearchView from './components/SearchView.vue'
+import SavesView from './components/SavesView.vue'
 
 const currentView = ref(1)
 const token = ref(null)
@@ -40,9 +41,9 @@ onMounted(() => {
       <div v-if="currentView === 3">
         <SearchView />
       </div>
-      <!-- <div v-else-if="currentView === 0">
+      <div v-else-if="currentView === 0">
         <SavesView />
-      </div> -->
+      </div>
     </div>
     <div v-else>
       <ul>

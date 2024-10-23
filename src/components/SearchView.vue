@@ -33,7 +33,7 @@ async function handleSearch() {
 </script>
 
 <template>
-  <div class="greetings">
+  <div class="search-container">
     <input v-model="cityName" placeholder="Enter City" required minlength="4" />
     <button @click="handleSearch">Search</button>
   </div>
