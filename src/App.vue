@@ -10,20 +10,20 @@ const success = ref(null)
 const error = ref(null)
 
 watch(currentView, () => {
-  success.value = true
+  token.value = localStorage.getItem('access')
 })
 watch(error, () => {
   success.value = null
 })
 
-function logout() {
-  localStorage.removeItem('token')
+async function logout() {
+  await localStorage.removeItem('access')
   token.value = null
   currentView.value = 1
 }
 
 onMounted(() => {
-  const tokenFromStorage = localStorage.getItem('token')
+  const tokenFromStorage = localStorage.getItem('access')
   if (tokenFromStorage) {
     token.value = tokenFromStorage
     currentView.value = 0
@@ -33,7 +33,6 @@ onMounted(() => {
 
 <template>
   <main>
-    <p>{{ currentView }}</p>
     <div v-if="token">
       <button @click="currentView = 0">Home</button>
       <button @click="logout">Logout</button>
@@ -45,7 +44,7 @@ onMounted(() => {
         <SavesView />
       </div> -->
     </div>
-    <div v-else-if="!token">
+    <div v-else>
       <ul>
         <li><button @click="currentView = 1">Login</button></li>
         <li><button @click="currentView = 2">Register</button></li>
@@ -65,38 +64,3 @@ onMounted(() => {
     </div>
   </main>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>

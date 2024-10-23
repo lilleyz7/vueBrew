@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from 'vue'
+import TableComponent from './TableComponent.vue'
 const cityName = ref('')
 const breweryData = ref([])
+const searched = ref(false)
 
 async function handleSearch() {
   let filteredName = cityName.value.trim().toLowerCase()
@@ -21,6 +23,7 @@ async function handleSearch() {
     }
     const json = await response.json()
     breweryData.value = json['data']
+    searched.value = true
     return
   } catch (e) {
     alert(e)
@@ -34,36 +37,9 @@ async function handleSearch() {
     <input v-model="cityName" placeholder="Enter City" required minlength="4" />
     <button @click="handleSearch">Search</button>
   </div>
-  <div v-if="breweryData.length > 0">
-    <p>yeee</p>
-    <div v-for="brew in breweryData" :key="brew.id">
-      <h1>{{ brew.name }}</h1>
-      <h3>{{ brew.city }}</h3>
-    </div>
+  <div v-if="searched">
+    <TableComponent :breweries="breweryData" />
   </div>
 </template>
 
-<style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
-  position: relative;
-  top: -10px;
-}
-
-h3 {
-  font-size: 1.2rem;
-}
-
-.greetings h1,
-.greetings h3 {
-  text-align: center;
-}
-
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
-  }
-}
-</style>
+<style scoped></style>

@@ -24,7 +24,8 @@ async function handleLogin() {
     }
 
     const successfulJson = await response.json()
-    localStorage.setItem('token', successfulJson.access)
+    localStorage.setItem('access', successfulJson.access)
+    localStorage.setItem('refresh', successfulJson.refresh)
     emit('response', 3)
     return
   } catch (e) {
@@ -35,8 +36,6 @@ async function handleLogin() {
 
 <template>
   <div className="form-container">
-    <h2>Login</h2>
-
     <form @submit.prevent="onSubmit" method="POST">
       <label>Username</label>
       <input
